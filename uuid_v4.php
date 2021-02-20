@@ -11,7 +11,7 @@ class UUIDv4
     public const UUID_VARIANT_BYTE = 9;
     public const UUID_VARIANT_CLEANUP_MASK = 0x3F;
     public const UUID_VARIANT_SET_MASK = 0x80;
-    private $uuid_str = '';
+    private $value = '';
     private function bin2dec($dec) : String //because built-in function bindec can return float
         {
         return hexdec(bin2hex($dec));
@@ -23,7 +23,7 @@ class UUIDv4
     public function generate()
         {
         $uuid = random_bytes (self::KEY_LENGTH_BYTES);
-        $this->uuid_str = '';
+        $this->value = '';
         //setting version
         $version = $this->bin2dec($uuid[self::UUID_VERSION_BYTE]);
         $version &= self::UUID_VERSION_CLEANUP_MASK;
@@ -43,11 +43,10 @@ class UUIDv4
             {
             if (in_array($i,$delimitter_position))
                 {
-                $this->uuid_str.='-';
+                $this->value.='-';
                 }
-            $this->uuid_str .= bin2hex($uuid[$i]);
+            $this->value .= bin2hex($uuid[$i]);
             }
-        return $uuid_str;
         }
     public function __construct($new_uuid = '')
         {
@@ -56,11 +55,11 @@ class UUIDv4
             if (is_string($new_uuid))
                 {
                 //TODO: validate?
-                $this->uuid_str = $new_uuid;
+                $this->value = $new_uuid;
                 }
             elseif ($new_uuid instanceof UUIDv4)
                 {
-                $this->uuid_str = $new_uuid->get();
+                $this->value = $new_uuid->get();
                 }
             else
                 {
@@ -74,7 +73,7 @@ class UUIDv4
         }
     public function get() : String
         {
-        return $this->uuid_str;
+        return $this->value;
         }
     public function __toString() : String
         {
